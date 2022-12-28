@@ -14,7 +14,7 @@ $userdata = check_login($conn);
 	<title>Dashboard</title>
 	<link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="dstyle.css">
+	<link rel="stylesheet" type="text/css" href="css/dstyle.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -39,7 +39,20 @@ $userdata = check_login($conn);
 		<span class="backicn"><i class="las la-angle-left"></i></span>		
 			</div>
 			<div class="backdrop"></div>
+			<?php
+				$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}'";
+				$res = mysqli_query($conn, $sel);
+				if (mysqli_num_rows($res) > 0) {
+					$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}' AND status=0";
+					$res = mysqli_query($conn, $sel);
+					$count = mysqli_num_rows($res);
+				}else{
+					$count = '0';
+				}
+				
+			?>
 			<div class="content">
+				
 				<header>
 					<div id="mobile" class="profilebtn">
 						<i class="las la-user-circle"></i>
@@ -49,13 +62,46 @@ $userdata = check_login($conn);
 					</div>
 					<h1>Book Borrowing System</h1>
 					<div class="notif" onclick="toggleNotif()">
-						<i class="las la-bell"></i>
+						<i class="las la-bell"><span class="las la-exclamation" id="count"><?php echo $count ?></span></i>
 					</div>
 					<div class="notifbox" id="box">
-						<h2>Notification</h2>
+						<h2>Notifications</h2><a href="removenotif.php" class="las la-times" id="remove"></a>
 						<div class="notifitem">
 							<div class="text">
-								<h4>No notifications yet.</h4>
+								
+								<?php
+								$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}' AND status=0";
+	$res = mysqli_query($conn, $sel);
+	$row = mysqli_fetch_array($res);
+	if (mysqli_num_rows($res) > 0) {
+		while ($row = mysqli_fetch_array($res)) {
+			date_default_timezone_set('Asia/Manila');
+			$format = 'Y-m-d';
+			$BD = 1;
+			$BM = 0;
+			$BY = 0;
+			$CD = date($format);
+			$BDT = date($format, strtotime(" -$BD days -$BM months -$BY years "));
+			$DDT = date($row['dueDate']);
+			if ($BDT < $DDT ) {
+					echo '
+			<li>
+			<h4>
+			<strong>You have book(s) to return before the due date.</strong><br>
+			<small><em>Hello ' . $row["borrowerNo"] . ', you have borrowed ' . $row["bookTitle"] . ' to return only until ' . $row["dueDate"] . '</em></small>
+			</h4>
+			</li>
+
+			';
+			}elseif ($DDT < $CD) {
+				echo '<li style="color: red;">Past duedate</li>';
+			}
+		}
+	}else{
+		echo '
+		<li><a href="#" class="text">No Notifications Found</a></li>';
+	}
+								?>
 							</div>
 						</div>
 					</div>
@@ -78,16 +124,25 @@ $userdata = check_login($conn);
 								<?php
 								$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}'";
 								$res = mysqli_query($conn, $sel);
+								if (mysqli_num_rows($res) > 0) {
 								while ($row = $res->fetch_assoc()) {
 									echo "<tr>
 									<td>" . $row['bookTitle'] . "</td>
 									<td>" . $row['dateBorrowed'] . "</td>
 									<td>" . $row['dueDate'] . "</td>
 									<td>
-										<a href='#' class='ren'>Renew</a>
+										<a href='#' class='ren' >Renew</a>
 									</td>
 								</tr>";
 								}
+							}else{
+								echo '
+								<td><h5>No </h5></td>
+								<td><h5>Currently </h5></td>
+								<td><h5>Borrowed </h5></td>
+								<td><h5>Books</h5></td>';
+							}
+								
 								
 								?>
 							</tbody>
@@ -107,17 +162,25 @@ $userdata = check_login($conn);
 								<?php
 								$sel = "SELECT*FROM violationtbl WHERE violatorNo='{$_SESSION["studentNo"]}'";
 								$res = mysqli_query($conn, $sel);
+								if (mysqli_num_rows($res) > 0) {
 								while ($row = $res->fetch_assoc()) {
 									echo "<tr>
 									<td>" . $row['violationName'] . "</td>
 								</tr>";
 								}
+							}else{
+								echo '
+								<td><h5>No Violations</h5></td>';
+							}
+
+								
 								?>
 							</tbody>
 						</table>
 					</div>
 				</div>
 				</div>
+				
 			</div>
 		</div>
 	</div>
