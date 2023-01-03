@@ -2,9 +2,9 @@
 include "db_link.php";
 
 function check_login($conn){
-	if (isset($_SESSION['studentNo'])) {
-		$id = $_SESSION['studentNo'];
-		$sel = "SELECT*FROM userstbl WHERE studentNo = '$id' limit 1";
+	if (isset($_SESSION['stud_num'])) {
+		$id = $_SESSION['stud_num'];
+		$sel = "SELECT*FROM student_users WHERE stud_num = '$id' limit 1";
 
 		$res = mysqli_query($conn, $sel);
 		if ($res && mysqli_num_rows($res) > 0) {

@@ -5,13 +5,13 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	$stud = $_POST['studno'];
 	$password = $_POST['password'];
-	$sel = "SELECT*FROM userstbl WHERE studentNo = '$stud' limit 1";
+	$sel = "SELECT*FROM student_users WHERE stud_num = '$stud' limit 1";
 	$res = mysqli_query($conn, $sel);
 	if($res){
 	if ($res && mysqli_num_rows($res) > 0) {
 		$userdata = mysqli_fetch_assoc($res);
 		if ($userdata['password'] === $password) {
-			$_SESSION['studentNo'] = $userdata['studentNo'];
+			$_SESSION['stud_num'] = $userdata['stud_num'];
 			header("location:dashboardpage.php");
 			die;
 		}else{

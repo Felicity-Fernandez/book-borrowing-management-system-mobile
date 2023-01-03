@@ -24,26 +24,26 @@ $userdata = check_login($conn);
 			<center>
 			<img src="imagesfold/<?php echo $userdata["pic"]; ?>" width= "100px" height= "100px" alt="">
 			<br>
-			<h2><?php echo $userdata['fname'], ' ', $userdata['lname'];?> </h2>
+			<h2><?php echo $userdata['first_name'], ' ', $userdata['last_name'];?> </h2>
 			<br>
 				<a href="profile.php" class="edit">Edit Profile</a>
 		</center>
 		<br>
 		<ul>
-		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['studentNo'];?></a></li>
-		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['year'], '-', $userdata['sect'];?> </a></li>
+		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['stud_num'];?></a></li>
+		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['year'], '-', $userdata['section'];?> </a></li>
 		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['course'];?></a></li>
-		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['dept'];?></a></li>
+		<li><i class="las la-id-badge"></i><a href="#"><?php echo $userdata['department'];?></a></li>
 		<li><i class="las la-sign-out-alt"></i><a href="logout.php">Logout</a></li>
 		</ul>
 		<span class="backicn"><i class="las la-angle-left"></i></span>		
 			</div>
 			<div class="backdrop"></div>
 			<?php
-				$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}'";
+				$sel = "SELECT*FROM borrowing_acts WHERE stud_num='{$_SESSION["stud_num"]}'";
 				$res = mysqli_query($conn, $sel);
 				if (mysqli_num_rows($res) > 0) {
-					$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}' AND status=0";
+					$sel = "SELECT*FROM borrowing_acts WHERE stud_num='{$_SESSION["stud_num"]}' AND status=0";
 					$res = mysqli_query($conn, $sel);
 					$count = mysqli_num_rows($res);
 				}else{
@@ -65,12 +65,12 @@ $userdata = check_login($conn);
 						<i class="las la-bell"><span class="las la-exclamation" id="count"><?php echo $count ?></span></i>
 					</div>
 					<div class="notifbox" id="box">
-						<h2>Notifications</h2><a href="removenotif.php" class="las la-times" id="remove"></a>
+						<h2>Notifications <a href="removenotif.php" class="las la-times" id="remove"></a></h2>
 						<div class="notifitem">
 							<div class="text">
 								
 								<?php
-								$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}' AND status=0";
+								$sel = "SELECT*FROM borrowing_acts WHERE stud_num='{$_SESSION["stud_num"]}' AND status=0";
 	$res = mysqli_query($conn, $sel);
 	$row = mysqli_fetch_array($res);
 	if (mysqli_num_rows($res) > 0) {
@@ -82,19 +82,19 @@ $userdata = check_login($conn);
 			$BY = 0;
 			$CD = date($format);
 			$BDT = date($format, strtotime(" -$BD days -$BM months -$BY years "));
-			$DDT = date($row['dueDate']);
+			$DDT = date($row['return_date']);
 			if ($BDT < $DDT ) {
 					echo '
+					<hr>
 			<li>
+			<a href="#" class="text">
 			<h4>
 			<strong>You have book(s) to return before the due date.</strong><br>
-			<small><em>Hello ' . $row["borrowerNo"] . ', you have borrowed ' . $row["bookTitle"] . ' to return only until ' . $row["dueDate"] . '</em></small>
-			</h4>
-			</li>
-
-			';
+			<small><em>Hello ' . $row["b_first_name"] . ', you have borrowed ' . $row["book_title"] . ' to return only until ' . $row["return_date"] . '</em></small>
+			</h4></a>
+			</li>';
 			}elseif ($DDT < $CD) {
-				echo '<li style="color: red;">Past duedate</li>';
+				echo '<hr><li style="color: red;">Past due date</li>';
 			}
 		}
 	}else{
@@ -122,14 +122,14 @@ $userdata = check_login($conn);
 							</thead>
 							<tbody>
 								<?php
-								$sel = "SELECT*FROM bookborrowed WHERE borrowerNo='{$_SESSION["studentNo"]}'";
+								$sel = "SELECT*FROM borrowing_acts WHERE stud_num='{$_SESSION["stud_num"]}'";
 								$res = mysqli_query($conn, $sel);
 								if (mysqli_num_rows($res) > 0) {
 								while ($row = $res->fetch_assoc()) {
 									echo "<tr>
-									<td>" . $row['bookTitle'] . "</td>
-									<td>" . $row['dateBorrowed'] . "</td>
-									<td>" . $row['dueDate'] . "</td>
+									<td>" . $row['book_title'] . "</td>
+									<td>" . $row['date_borrowed'] . "</td>
+									<td>" . $row['return_date'] . "</td>
 									<td>
 										<a href='#' class='ren' >Renew</a>
 									</td>
@@ -160,7 +160,7 @@ $userdata = check_login($conn);
 							</thead>
 							<tbody>
 								<?php
-								$sel = "SELECT*FROM violationtbl WHERE violatorNo='{$_SESSION["studentNo"]}'";
+								$sel = "SELECT*FROM violationtbl WHERE stud_num='{$_SESSION["stud_num"]}'";
 								$res = mysqli_query($conn, $sel);
 								if (mysqli_num_rows($res) > 0) {
 								while ($row = $res->fetch_assoc()) {

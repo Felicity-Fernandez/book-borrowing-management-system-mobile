@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-if (isset($_SESSION['studentNo'])) {
-	unset($_SESSION['studentNo']);
+if (isset($_SESSION['stud_num'])) {
+	unset($_SESSION['stud_num']);
 }
 header('location: mobilelogin.php');
 ?>

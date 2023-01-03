@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	$department = $_POST['department'];
 	$password = $_POST['pass'];
 	$rpassword = $_POST['pass2'];
-	$sel = "SELECT*FROM userstbl WHERE studentNo = '$stud' && password = '$password'";
+	$sel = "SELECT*FROM student_users WHERE stud_num = '$stud' && password = '$password'";
 	$res = mysqli_query($conn, $sel);
 	if (mysqli_num_rows($res) > 0) {
 		$error[] = 'User already exist.';
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		if ($password != $rpassword) {
 			$error[] = 'Password not matched.';
 		}else{
-			$ins = "INSERT INTO userstbl(studentNo, fname, lname, course, year, sect, dept, password) VALUES('$stud', '$fname', '$lname', '$course', '$year', '$section', '$department', '$password')";
+			$ins = "INSERT INTO student_users(stud_num, first_name, last_name, course, year, section, department, password) VALUES('$stud', '$fname', '$lname', '$course', '$year', '$section', '$department', '$password')";
 			mysqli_query($conn, $ins);
 			header('location:mobilelogin.php');
 		}

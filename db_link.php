@@ -2,7 +2,7 @@
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";
-$dbname = "users";
+$dbname = "book_borrowing_system";
 if (!$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname)) {
 	die("Failed to connect");
 }

@@ -22,7 +22,7 @@ if (isset($_POST["submit"])) {
 				if ($pic_size > 5242880) {
 					$error[] = 'Image maximum file size is 5MB only.';
 				}else{
-					$sel = "UPDATE userstbl SET studentNo='$stud', fname='$fname', lname='$lname', course='$course', year='$year', sect='$section', dept='$department', password='$password', pic='$new_pic' WHERE studentNo='{$_SESSION["studentNo"]}'";
+					$sel = "UPDATE student_users SET stud_num='$stud', first_name='$fname', last_name='$lname', course='$course', year='$year', section='$section', department='$department', password='$password', pic='$new_pic' WHERE stud_num='{$_SESSION["stud_num"]}'";
 					$res = mysqli_query($conn, $sel);
 					if ($res) {
 						move_uploaded_file($pic_tmp_name, "imagesfold/" . $new_pic);
@@ -113,7 +113,7 @@ if (isset($_POST["submit"])) {
 				}
 				?>
 				<?php
-				$sel = "SELECT*FROM userstbl WHERE studentNo = '{$_SESSION["studentNo"]}'";
+				$sel = "SELECT*FROM student_users WHERE stud_num = '{$_SESSION["stud_num"]}'";
 				$res = mysqli_query($conn, $sel);
 				if (mysqli_num_rows($res) > 0) {
 					while ($row = mysqli_fetch_assoc($res)) {
@@ -122,19 +122,19 @@ if (isset($_POST["submit"])) {
 				<input type="file" accept="image/*" id="pic" name="pic">
 				<img src="imagesfold/<?php echo $row["pic"]; ?>" width= "100px" height= "100px" alt="">
 				<label for='stud'>Student Number:</label>
-				<input type="text" id="stud" name="studno" maxlength="9" value="<?php echo $row['studentNo']; ?>"required>
+				<input type="text" id="stud" name="studno" maxlength="9" value="<?php echo $row['stud_num']; ?>"required>
 				<label for="firstname">First Name:</label>
-				<input type="text" id="firstname" name="fname" value="<?php echo $row['fname']; ?>" required>
+				<input type="text" id="firstname" name="fname" value="<?php echo $row['first_name']; ?>" required>
 				<label for="lastname">Last Name:</label>
-				<input type="text" id="lastname" name="lname" value="<?php echo $row['lname']; ?>" required>
+				<input type="text" id="lastname" name="lname" value="<?php echo $row['last_name']; ?>" required>
 				<label for="cour">Course:</label>
 				<input type="text" id="cour" name="course" value="<?php echo $row['course']; ?>" required>
 				<label for='yir'>Year:</label>
 				<input type="text" id="yir" name="year" maxlength="1" value="<?php echo $row['year']; ?>" required>
 				<label for='sec'>Section:</label>
-				<input type="text" id="sec" name="section" maxlength="1" value="<?php echo $row['sect']; ?>" required>
+				<input type="text" id="sec" name="section" maxlength="1" value="<?php echo $row['section']; ?>" required>
 				<label for="dept">Department:</label>
-				<input type="text" id="dept" name="department" value="<?php echo $row['dept']; ?>" required>
+				<input type="text" id="dept" name="department" value="<?php echo $row['department']; ?>" required>
 				<label for="pass">Password:</label>
 				<input type="password" id="pass" name="pass" value="<?php echo $row['password']; ?>" required>
 				<label for="pass2">Re-enter password:</label>
