@@ -10,25 +10,7 @@ body{
 	font-family: 'Open Sans', sans-serif;
 	overflow: hidden;
 }
-#alert_popover
-  {
-   display:block;
-   position:absolute;
-   bottom:50px;
-   left:50px;
-  }
-  .wrapper {
-    display: table-cell;
-    vertical-align: bottom;
-    height: auto;
-    width:200px;
-  }
-  .alert_default
-  {
-   color: #333333;
-   background-color: #f2f2f2;
-   border-color: #cccccc;
-  }
+
 .listtable{
 	margin-top: 20px;
 }
@@ -165,13 +147,13 @@ header{
 	cursor: pointer;
 }
 .notif {
-	font-size: 40px;
+	font-size: 35px;
 	color: #fff;
 	cursor: pointer;
 	display: inline-block;
 }
 #count{
-	font-size: 15px;
+	font-size: 10px;
 	color: red;
 	border-radius: 50%;
 	position: relative;
