@@ -106,6 +106,15 @@ $userdata = check_login($conn);
 						</div>
 					</div>
 				</header>
+				<?php
+				if (isset($_GET['id'])) {
+					$id=$_GET['id'];
+					$sel = "UPDATE borrowing_acts SET req_sent = '1' WHERE stud_num='{$_SESSION["stud_num"]}' AND id='$id'";
+					$res = mysqli_query($conn, $sel);
+					header("location:dashboardpage.php");
+					die();
+				}
+				?>
 				<div class="data">
 					<h2>Dashboard</h2>
 					<div class="listtable">
@@ -131,7 +140,7 @@ $userdata = check_login($conn);
 									<td>" . $row['date_borrowed'] . "</td>
 									<td>" . $row['return_date'] . "</td>
 									<td>
-										<a href='#' class='ren' >Renew</a>
+										<a href='dashboardpage.php?id=".$row['id']."'class='ren' >Renew</a>
 									</td>
 								</tr>";
 								}
@@ -179,6 +188,48 @@ $userdata = check_login($conn);
 						</table>
 					</div>
 				</div>
+				<div class="listtable">
+					<div class="list">
+						<h1>Renewal Request</h1>
+						<table class="tab">
+							<thead>
+								<tr>
+									<th>Student Number</th>
+									<th>Student Name</th>
+									<th>Book Title</th>
+									<th>Due Date</th>
+									<th> </th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								$sel = "SELECT*FROM borrowing_acts WHERE stud_num='{$_SESSION["stud_num"]}' AND req_sent = '1'";
+								$res = mysqli_query($conn, $sel);
+								if (mysqli_num_rows($res) > 0) {
+								while ($row = $res->fetch_assoc()) {
+									echo "<tr>
+									<td>" . $row['stud_num'] . "</td>
+									<td>" . $row['b_first_name'] . " ".$row['b_last_name']."</td>
+									<td>" . $row['book_title'] . "</td>
+									<td>" . $row['return_date'] . "</td>
+									<td>
+										<a href='#'class='ren' >Accept</a>
+									</td>
+								</tr>";
+								}
+							}else{
+								echo '
+								<td><h5>No Request</h5></td>';
+							}
+
+								
+								?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				</div>
+				
 				</div>
 				
 			</div>
