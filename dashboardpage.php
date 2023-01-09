@@ -64,8 +64,17 @@ $userdata = check_login($conn);
 					<div class="notif" onclick="toggleNotif()">
 						<i class="las la-bell"><span class="las la-exclamation" id="count"><?php echo $count ?></span></i>
 					</div>
+					<?php
+				if (isset($_GET['id'])) {
+					$ids=$_GET['id'];
+					$sel = "UPDATE borrowing_acts SET status = '1' WHERE stud_num='{$_SESSION["stud_num"]}' AND id='$ids'";
+					$res = mysqli_query($conn, $sel);
+					header("location:dashboardpage.php");
+					die();
+				}
+				?>
 					<div class="notifbox" id="box">
-						<h2>Notifications <a href="removenotif.php" class="las la-times" id="remove"></a></h2>
+						<h2>Notifications </h2>
 						<div class="notifitem">
 							<div class="text">
 								
@@ -94,7 +103,7 @@ $userdata = check_login($conn);
 			</h4></a>
 			</li>';
 			}elseif ($DDT < $CD) {
-				echo '<hr><li style="color: red;">Past due date</li>';
+				echo "<hr><li style='color: red;'>Past due date <a href='dashboardpage.php?id=".$row['id']."' class='las la-times'></a></li>";
 			}
 		}
 	}else{
